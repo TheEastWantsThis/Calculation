@@ -63,17 +63,20 @@ func (s *calcService) GetCalculationByID(id string) (Calculation, error) {
 }
 
 func (s *calcService) UpdateCalculation(id string, expression string) (Calculation, error) {
+
+	calc, err := s.repo.GetCalculationByID(id)
+	if err != nil {
+		return Calculation{}, err
+	}
 	result, err := s.Calculatexpression(expression)
 
 	if err != nil {
 		return Calculation{}, err
 	}
 
-	calc := Calculation{
-		ID:         id,
-		Expression: expression,
-		Result:     result,
-	}
+	calc.Expression = expression
+	calc.Result = result
+
 	if err := s.repo.UpdateCalculation(calc); err != nil {
 		return Calculation{}, err
 	}
