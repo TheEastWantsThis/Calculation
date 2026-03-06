@@ -34,7 +34,7 @@ func (r *calcRepositry) GetAllCalculation() ([]Calculation, error) {
 
 func (r *calcRepositry) GetCalculationByID(id string) (Calculation, error) {
 	var calc Calculation
-	err := r.db.First(calc, "id = ?", id).Error
+	err := r.db.First(&calc, "id = ?", id).Error
 	return calc, err
 }
 

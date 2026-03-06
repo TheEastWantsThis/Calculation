@@ -2,6 +2,7 @@ package db
 
 import (
 	"log"
+	calculationService "project/internal/calculationServce"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -9,7 +10,7 @@ import (
 
 var db *gorm.DB
 
-func InitDB() {
+func InitDB() (*gorm.DB, error) {
 	dsn := "host=localhost user=postgres password=yourpassword dbname=postgres port=5432 sslmode=disable"
 
 	var err error
@@ -19,7 +20,9 @@ func InitDB() {
 		log.Fatalf("Could not connect to database: %v", err)
 	}
 
-	if err := db.AutoMigrate(&Calculation{}); err != nil {
+	if err := db.AutoMigrate(&calculationService.Calculation{}); err != nil {
 		log.Fatalf("Could not migrate: %v", err)
 	}
+
+	return db, nil
 }
