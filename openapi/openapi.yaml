@@ -1,0 +1,79 @@
+openapi: 3.0.0
+info: 
+  title: api
+  version: 1.0.0
+paths:
+  /calculations:
+    get:
+      summary: get all calculations
+      tags:
+        -calculations
+      responses:
+       '200':
+         description: List of calculations
+         content:
+           application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Calculation'
+    post:
+      summary: create calculation
+      tags:
+        -calculations
+      requestBody:
+        description: take expression
+        required: true
+        content:
+          application/json:
+            schema:
+            $ref: '#/components/schemas/Calculation'
+      responses:
+        '201':
+          description: create calculation
+          content:
+            application/json:
+               schema:
+               $ref: '#/components/schemas/Calculation'
+  /calculations/id:
+    putch:
+      summary: putch the calculation
+      tags:
+        -calculations
+      requestBody:
+        description: take new expression
+        required: true
+        content:
+          application/json:
+            schema:
+            $ref: '#/components/schemas/Calculation'
+      responses:
+        '201':
+        description: updated calculation
+        content:
+            application/json:
+               schema:
+               $ref: '#/components/schemas/Calculation'
+    delete:
+      summary: delete the calculation
+      tags:
+        -calculations
+      requestBody:
+        description: take id
+        required: true
+        content:
+          application/json:
+            schema:
+            $ref: '#/components/schemas/Calculation'
+      responses:
+        '204':
+        description: deleted calculation
+        content:
+            application/json:
+               schema:
+               $ref: '#/components/schemas/Calculation'
+
+components:
+  schemas:
+    Calculation:
+      type: object

@@ -36,7 +36,6 @@ func (s *calcService) Calculatexpression(expression string) (string, error) {
 
 }
 
-// CreateCalculation implements [CalculationService].
 func (s *calcService) CreateCalculation(expression string) (Calculation, error) {
 	result, err := s.Calculatexpression(expression)
 	if err != nil {
