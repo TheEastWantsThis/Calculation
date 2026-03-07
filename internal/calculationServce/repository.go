@@ -4,8 +4,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// основыне методы CRUD -creat, read, update, delete.
-
 type CalculationRepository interface {
 	CreateCalculation(calc Calculation) error
 	GetAllCalculation() ([]Calculation, error)
