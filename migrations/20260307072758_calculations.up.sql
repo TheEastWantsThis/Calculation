@@ -1,0 +1,5 @@
+CREATE TABLE calculation (
+  id VARCHAR(255) PRIMARY KEY,
+  expression VARCHAR(255) NOT NULL,
+  result VARCHAR(255) NOT NULL
+);
