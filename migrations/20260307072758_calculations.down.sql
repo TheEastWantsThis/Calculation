@@ -1,1 +1,1 @@
-DROP TABLE IF EXISTS calculation;
+DROP TABLE IF EXISTS calculations;

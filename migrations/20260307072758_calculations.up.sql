@@ -1,4 +1,4 @@
-CREATE TABLE calculation (
+CREATE TABLE calculations (
   id VARCHAR(255) PRIMARY KEY,
   expression VARCHAR(255) NOT NULL,
   result VARCHAR(255) NOT NULL
