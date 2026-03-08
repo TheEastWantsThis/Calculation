@@ -22,3 +22,6 @@ run:
 
 gen:
 	oapi-codegen -config openapi/.openapi -include-tags calculations -package calculations openapi/openapi.yaml > ./internal/web/calculations/api.gen.go
+
+lint:
+	golangci-lint run --color=auto

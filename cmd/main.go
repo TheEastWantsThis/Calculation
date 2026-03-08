@@ -24,10 +24,12 @@ func main() {
 	calcHanlers := handlers.NewCalculationHandler(calcService)
 
 	e.Use(middleware.CORS())
-	e.Use(middleware.Logger())
+	e.Use(middleware.RequestLogger())
 
 	strictHandler := calculations.NewStrictHandler(calcHanlers, nil) // тут будет ошибка
 	calculations.RegisterHandlers(e, strictHandler)
 
-	e.Start("localhost:8080")
+	if err := e.Start("localhost:8080"); err != nil {
+		log.Fatalf("Coud not start programm err: %v", err)
+	}
 }
