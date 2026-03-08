@@ -6,9 +6,11 @@ require (
 	github.com/Knetic/govaluate v3.0.0+incompatible
 	github.com/google/uuid v1.6.0
 	github.com/labstack/echo/v4 v4.15.1
+	github.com/oapi-codegen/runtime v1.2.0
 )
 
 require (
+	github.com/apapsch/go-jsonmerge/v2 v2.0.0 // indirect
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect

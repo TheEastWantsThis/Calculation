@@ -1,79 +1,91 @@
 openapi: 3.0.0
-info: 
+info:
   title: api
   version: 1.0.0
+
 paths:
   /calculations:
     get:
       summary: get all calculations
       tags:
-        -calculations
+        - calculations
       responses:
-       '200':
-         description: List of calculations
-         content:
-           application/json:
+        '200':
+          description: List of calculations
+          content:
+            application/json:
               schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/Calculation'
+
     post:
       summary: create calculation
       tags:
-        -calculations
+        - calculations
       requestBody:
         description: take expression
         required: true
         content:
           application/json:
             schema:
-            $ref: '#/components/schemas/Calculation'
+              $ref: '#/components/schemas/Calculation'
       responses:
         '201':
           description: create calculation
           content:
             application/json:
-               schema:
-               $ref: '#/components/schemas/Calculation'
-  /calculations/id:
-    putch:
-      summary: putch the calculation
+              schema:
+                $ref: '#/components/schemas/Calculation'
+
+  /calculations/{id}:
+    patch:
+      summary: patch the calculation
       tags:
-        -calculations
+        - calculations
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
       requestBody:
         description: take new expression
         required: true
         content:
           application/json:
             schema:
-            $ref: '#/components/schemas/Calculation'
+              $ref: '#/components/schemas/Calculation'
       responses:
-        '201':
-        description: updated calculation
-        content:
+        '200':
+          description: updated calculation
+          content:
             application/json:
-               schema:
-               $ref: '#/components/schemas/Calculation'
+              schema:
+                $ref: '#/components/schemas/Calculation'
+
     delete:
       summary: delete the calculation
       tags:
-        -calculations
-      requestBody:
-        description: take id
+        - calculations
+      parameters:
+      - name: id
+        in: path
         required: true
-        content:
-          application/json:
-            schema:
-            $ref: '#/components/schemas/Calculation'
+        schema:
+          type: string
       responses:
         '204':
-        description: deleted calculation
-        content:
-            application/json:
-               schema:
-               $ref: '#/components/schemas/Calculation'
+          description: deleted calculation
 
 components:
   schemas:
     Calculation:
       type: object
+      properties:
+        id:
+          type: string
+        expression:
+          type: string
+        result:
+          type: string
