@@ -1,10 +1,9 @@
 package handlers
 
 import (
-	"net/http"
+	"context"
 	calculationService "project/internal/calculationServce"
-
-	"github.com/labstack/echo/v4"
+	"project/internal/web/calculations"
 )
 
 type CalculationsHandlers struct {
@@ -15,54 +14,66 @@ func NewCalculationHandler(s calculationService.CalculationService) *Calculation
 	return &CalculationsHandlers{service: s}
 }
 
-func (h *CalculationsHandlers) GetCaculate(c echo.Context) error {
-	calculations, err := h.service.GetAllCalculation()
+func (h *CalculationsHandlers) GetCalculations(ctx context.Context, request calculations.GetCalculationsRequestObject) (calculations.GetCalculationsResponseObject, error) {
+	calcu, err := h.service.GetAllCalculation()
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "coud not get calcilations"})
+		return nil, err
+	}
+	response := calculations.GetCalculations200JSONResponse{}
+
+	for _, clc := range calcu {
+		calc := calculations.Calculation{
+			Id:         &clc.ID,
+			Expression: &clc.Expression,
+			Result:     &clc.Result,
+		}
+		response = append(response, calc)
 	}
 
-	return c.JSON(http.StatusOK, calculations)
+	return response, nil
 }
 
-func (h *CalculationsHandlers) PostCaculate(c echo.Context) error {
-	var req calculationService.CalculationRequest
+func (h *CalculationsHandlers) PostCalculations(ctx context.Context, request calculations.PostCalculationsRequestObject) (calculations.PostCalculationsResponseObject, error) {
+	calc := request.Body
 
-	if err := c.Bind(&req); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid request"})
-	}
-
-	calc, err := h.service.CreateCalculation(req.Expression)
-
+	calcul, err := h.service.CreateCalculation(*calc.Expression)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Coud not create calculation"})
+		return nil, err
 	}
 
-	return c.JSON(http.StatusCreated, calc)
+	response := calculations.PostCalculations201JSONResponse{
+		Id:         &calcul.ID,
+		Expression: &calcul.Expression,
+		Result:     &calcul.Result,
+	}
 
+	return response, nil
 }
 
-func (h *CalculationsHandlers) PatchCalculation(c echo.Context) error {
-	id := c.Param("id")
-	var r calculationService.CalculationRequest
+func (h *CalculationsHandlers) PatchCalculationsId(ctx context.Context, request calculations.PatchCalculationsIdRequestObject) (calculations.PatchCalculationsIdResponseObject, error) {
+	id := request.Id
+	calc := request.Body
 
-	if err := c.Bind(&r); err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid request"})
-	}
-
-	updatedcalculation, err := h.service.UpdateCalculation(id, r.Expression)
+	updatedcalculation, err := h.service.UpdateCalculation(id, *calc.Expression)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, map[string]string{"error": "Coud not update calculation"})
+		return nil, err
 	}
 
-	return c.JSON(http.StatusOK, updatedcalculation)
+	response := calculations.PatchCalculationsId200JSONResponse{
+		Id:         &updatedcalculation.ID,
+		Expression: &updatedcalculation.Expression,
+		Result:     &updatedcalculation.Result,
+	}
+
+	return response, nil
 }
 
-func (h *CalculationsHandlers) DeleteCalculation(c echo.Context) error {
-	id := c.Param("id")
+func (h *CalculationsHandlers) DeleteCalculationsId(ctx context.Context, request calculations.DeleteCalculationsIdRequestObject) (calculations.DeleteCalculationsIdResponseObject, error) {
 
+	id := request.Id
 	if err := h.service.DeleteCalculation(id); err != nil {
-		return c.JSON(http.StatusInternalServerError, map[string]string{"error": "coud not delete calcilations"})
+		return nil, err
 	}
+	return calculations.DeleteCalculationsId204Response{}, nil
 
-	return c.NoContent(http.StatusNoContent)
 }
