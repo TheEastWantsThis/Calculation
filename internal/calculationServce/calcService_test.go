@@ -213,3 +213,44 @@ func TestDeleteCalculation(t *testing.T) {
 		})
 	}
 }
+
+func TestGetCalculationByID(t *testing.T) {
+	test := []struct {
+		name      string
+		id        string
+		mockSetup func(m *MockCalcUlationRepository, id string)
+		wantErr   bool
+	}{
+		{
+			name: "Успешное нахождение выражения по ID",
+			id:   "123",
+			mockSetup: func(m *MockCalcUlationRepository, id string) {
+				m.On("GetCalculationByID", id).Return(Calculation{}, nil)
+			},
+			wantErr: false,
+		},
+		{
+			name: "Ошибка при поиске выражения",
+			id:   "123",
+			mockSetup: func(m *MockCalcUlationRepository, id string) {
+				m.On("GetCalculationByID", id).Return(nil, errors.New("db error"))
+			},
+			wantErr: true,
+		},
+	}
+	for _, tt := range test {
+		t.Run(tt.name, func(t *testing.T) {
+			mockRepo := new(MockCalcUlationRepository)
+			tt.mockSetup(mockRepo, tt.id)
+			service := NewCalculationService(mockRepo)
+			result, err := service.GetCalculationByID(tt.id)
+			if tt.wantErr {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+				assert.Equal(t, Calculation{}, result)
+			}
+			mockRepo.AssertExpectations(t)
+		})
+	}
+}
