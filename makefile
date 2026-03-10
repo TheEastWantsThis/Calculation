@@ -16,12 +16,15 @@ migrate:
 migrate-down:
 	$(MIGRATE) down
 	
-# для удобства добавим команду run, которая будет запускать наше приложение
-run:
-	go run cmd/main.go # Теперь при вызове make run мы запустим наш сервер
 
-gen:
+run:
+	go run cmd/main.go  
+	
+gen-calcs:
 	oapi-codegen -config openapi/.openapi -include-tags calculations -package calculations openapi/openapi.yaml > ./internal/web/calculations/api.gen.go
+
+gen-users:
+	oapi-codegen -config openapi/.openapi -include-tags users -package users openapi/openapi.yaml > ./internal/web/users/api.gen.go
 
 lint:
 	golangci-lint run --color=auto

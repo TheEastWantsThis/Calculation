@@ -77,6 +77,79 @@ paths:
       responses:
         '204':
           description: deleted calculation
+  /users:
+    get:
+      summary: get all users
+      tags:
+        - users
+      responses:
+        '200':
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Users'
+
+    post:
+      summary: Create users
+      tags:
+        - users
+      requestBody:
+        description: Take info about user
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Users'
+      responses:
+        '201':
+          description: Created user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Users'
+  /users/{id}:
+    patch:
+      summary: Update info about user
+      tags:
+        - users
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+       description: Take new info about user
+       required: true
+       content:
+        application/json:
+            schema:
+              $ref: '#/components/schemas/Users'
+      responses:
+        '200':
+          description: updated user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Users'
+    delete:
+      summary: delete the user
+      tags:
+        - users
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: deleted calculation
+
+
 
 components:
   schemas:
@@ -89,3 +162,23 @@ components:
           type: string
         result:
           type: string
+    Users:
+      type: object
+      properties:
+        id:
+          type: string
+        Email:
+          type: string
+        Password:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
