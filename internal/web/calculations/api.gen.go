@@ -19,6 +19,7 @@ type Calculation struct {
 	Expression *string `json:"expression,omitempty"`
 	Id         *string `json:"id,omitempty"`
 	Result     *string `json:"result,omitempty"`
+	UserId     *string `json:"user_id,omitempty"`
 }
 
 // PostCalculationsJSONRequestBody defines body for PostCalculations for application/json ContentType.

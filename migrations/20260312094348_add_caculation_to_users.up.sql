@@ -1,0 +1,3 @@
+ALTER TABLE calculations 
+ADD COLUMN user_id VARCHAR(255) REFERENCES users(id)
+ON DELETE CASCADE;

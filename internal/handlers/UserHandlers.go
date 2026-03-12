@@ -11,6 +11,45 @@ type UserHand struct {
 	s userservice.UserService
 }
 
+// GetUsersId implements [users.StrictServerInterface].
+func (h *UserHand) GetUsersId(ctx context.Context, request users.GetUsersIdRequestObject) (users.GetUsersIdResponseObject, error) {
+
+	id := request.Id
+
+	user, err := h.s.GetAllCalculationsForUser(id)
+	if err != nil {
+		return nil, err
+	}
+
+	var deletedAt *time.Time
+	if user.DeletedAt.Valid {
+		deletedAt = &user.DeletedAt.Time
+	}
+
+	var calcs []users.Calculation
+
+	for _, c := range user.Calculations {
+		calcs = append(calcs, users.Calculation{
+			Id:         &c.ID,
+			Expression: &c.Expression,
+			Result:     &c.Result,
+			UserId:     &c.UserID,
+		})
+	}
+
+	result := users.GetUsersId200JSONResponse{
+		Id:          &user.ID,
+		Email:       &user.Email,
+		Password:    &user.Password,
+		Calculation: &calcs,
+		CreatedAt:   &user.CreatedAt,
+		UpdatedAt:   user.UpdatedAt,
+		DeletedAt:   deletedAt,
+	}
+
+	return result, nil
+}
+
 func NewUserHandler(ser userservice.UserService) *UserHand {
 	return &UserHand{s: ser}
 }

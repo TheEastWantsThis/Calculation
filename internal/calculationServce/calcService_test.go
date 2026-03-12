@@ -10,24 +10,27 @@ import (
 
 func TestCreateCalculation(t *testing.T) {
 	tests := []struct {
-		name      string
-		input     string
-		mockSetup func(m *MockCalcUlationRepository, input string)
-		wantErr   bool
+		name       string
+		expression string
+		UserID     string
+		mockSetup  func(m *MockCalcUlationRepository, expression string, UserID string)
+		wantErr    bool
 	}{
 		{
-			name:  "успешное создание выражения",
-			input: "55+55",
-			mockSetup: func(m *MockCalcUlationRepository, input string) {
+			name:       "успешное создание выражения",
+			expression: "55+55",
+			UserID:     "123",
+			mockSetup: func(m *MockCalcUlationRepository, expression string, UserID string) {
 
 				m.On("CreateCalculation", mock.Anything).Return(nil)
 			},
 			wantErr: false,
 		},
 		{
-			name:  "ошибка при создании выражения",
-			input: "55+55",
-			mockSetup: func(m *MockCalcUlationRepository, input string) {
+			name:       "ошибка при создании выражения",
+			expression: "55+55",
+			UserID:     "123",
+			mockSetup: func(m *MockCalcUlationRepository, expression string, UserID string) {
 				m.On("CreateCalculation", mock.Anything).Return(errors.New("db error"))
 			},
 			wantErr: true,
@@ -37,16 +40,16 @@ func TestCreateCalculation(t *testing.T) {
 	for _, cc := range tests {
 		t.Run(cc.name, func(t *testing.T) {
 			mockRepo := new(MockCalcUlationRepository)
-			cc.mockSetup(mockRepo, cc.input)
+			cc.mockSetup(mockRepo, cc.expression, cc.UserID)
 
 			service := NewCalculationService(mockRepo)
-			result, err := service.CreateCalculation(cc.input)
+			result, err := service.CreateCalculation(cc.expression, cc.UserID)
 
 			if cc.wantErr {
 				assert.Error(t, err)
 			} else {
 				assert.NoError(t, err)
-				assert.Equal(t, cc.input, result.Expression)
+				assert.Equal(t, cc.expression, result.Expression)
 			}
 			mockRepo.AssertExpectations(t)
 		})

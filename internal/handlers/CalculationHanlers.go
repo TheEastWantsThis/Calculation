@@ -24,6 +24,7 @@ func (h *CalculationsHandlers) GetCalculations(ctx context.Context, request calc
 	for _, clc := range calcu {
 		calc := calculations.Calculation{
 			Id:         &clc.ID,
+			UserId:     &clc.UserID,
 			Expression: &clc.Expression,
 			Result:     &clc.Result,
 		}
@@ -36,13 +37,14 @@ func (h *CalculationsHandlers) GetCalculations(ctx context.Context, request calc
 func (h *CalculationsHandlers) PostCalculations(ctx context.Context, request calculations.PostCalculationsRequestObject) (calculations.PostCalculationsResponseObject, error) {
 	calc := request.Body
 
-	calcul, err := h.service.CreateCalculation(*calc.Expression)
+	calcul, err := h.service.CreateCalculation(*calc.Expression, *calc.UserId)
 	if err != nil {
 		return nil, err
 	}
 
 	response := calculations.PostCalculations201JSONResponse{
 		Id:         &calcul.ID,
+		UserId:     &calcul.UserID,
 		Expression: &calcul.Expression,
 		Result:     &calcul.Result,
 	}

@@ -111,6 +111,24 @@ paths:
               schema:
                 $ref: '#/components/schemas/Users'
   /users/{id}:
+    get:
+      summary: Get user with all his calculations
+      tags:
+        - users
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: user with calculations
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Users'
+
     patch:
       summary: Update info about user
       tags:
@@ -122,10 +140,10 @@ paths:
         schema:
           type: string
       requestBody:
-       description: Take new info about user
-       required: true
-       content:
-        application/json:
+        description: Take new info about user
+        required: true
+        content:
+          application/json:
             schema:
               $ref: '#/components/schemas/Users'
       responses:
@@ -149,8 +167,6 @@ paths:
         '204':
           description: deleted calculation
 
-
-
 components:
   schemas:
     Calculation:
@@ -162,6 +178,8 @@ components:
           type: string
         result:
           type: string
+        user_id:
+          type: string
     Users:
       type: object
       properties:
@@ -169,6 +187,10 @@ components:
           type: string
         Email:
           type: string
+        Calculation:
+          type: array
+          items:
+            $ref: '#/components/schemas/Calculation'
         Password:
           type: string
         created_at:

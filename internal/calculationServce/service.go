@@ -8,7 +8,7 @@ import (
 )
 
 type CalculationService interface {
-	CreateCalculation(expression string) (Calculation, error)
+	CreateCalculation(expression, user_id string) (Calculation, error)
 	GetAllCalculation() ([]Calculation, error)
 	GetCalculationByID(id string) (Calculation, error)
 	UpdateCalculation(id, expression string) (Calculation, error)
@@ -36,13 +36,14 @@ func (s *calcService) Calculatexpression(expression string) (string, error) {
 
 }
 
-func (s *calcService) CreateCalculation(expression string) (Calculation, error) {
+func (s *calcService) CreateCalculation(expression, user_id string) (Calculation, error) {
 	result, err := s.Calculatexpression(expression)
 	if err != nil {
 		return Calculation{}, err
 	}
 	calc := Calculation{
 		ID:         uuid.NewString(),
+		UserID:     user_id,
 		Expression: expression,
 		Result:     result,
 	}

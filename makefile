@@ -25,6 +25,7 @@ gen-calcs:
 
 gen-users:
 	oapi-codegen -config openapi/.openapi -include-tags users -package users openapi/openapi.yaml > ./internal/web/users/api.gen.go
+	
 
 lint:
 	golangci-lint run --color=auto

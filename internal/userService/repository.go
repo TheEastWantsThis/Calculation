@@ -8,10 +8,21 @@ type UserRepository interface {
 	GetUserByID(id string) (User, error)
 	UpdateUser(user User) error
 	DeleteUser(id string) error
+	GetAllCalculationsForUser(id string) (User, error)
 }
 
 type uRepo struct {
 	db *gorm.DB
+}
+
+func (r *uRepo) GetAllCalculationsForUser(id string) (User, error) {
+	var us User
+
+	err := r.db.
+		Preload("Calculations").
+		First(&us, "id = ?", id).Error
+
+	return us, err
 }
 
 func NewUserRepository(db *gorm.DB) UserRepository {
